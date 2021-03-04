@@ -68,4 +68,27 @@ contract('KamalTokenSale', function(accounts) {
         });
 
     });
+
+
+    it('ends token sale' , function() {
+        return KamalToken.deployed().then(function(instance) {
+            tokenInstance = instance;
+            return KamalTokenSale.deployed();
+        }).then(function(instance) {
+            tokenSaleInstance = instance;
+            return tokenSaleInstance.endSale({from: buyer});
+        }).then(assert.fail).catch(async function(error) {
+            assert(error.message.indexOf('revert') >= 0, 'only admin can end sale');
+            return tokenSaleInstance.endSale({from: admin});
+        }).then(function(receipt) {
+            return tokenInstance.balanceOf(admin);
+        }).then(function(balance) {
+            assert.equal(balance.toNumber(), 999990, 'returns all unsold token');
+            // check if contract has no balance
+            let newBalance = web3.eth.getBalance(tokenSaleInstance.address);
+            let isNewBalanceEmpty = newBalance && Object.keys(newBalance).length === 0;
+            assert.equal(isNewBalanceEmpty, true, 'contract has no balance');
+        });
+
+    });
 });

@@ -40,4 +40,13 @@ contract KamalTokenSale {
         // trigger a sell event
         emit Sell(msg.sender, _numberOfTokens);
     }
+
+    // ending the token sale
+    function endSale() public {
+        require(msg.sender == admin);
+
+        require(tokenContract.transfer(admin, tokenContract.balanceOf(this)));
+
+        admin.transfer(address(this).balance);
+    }
 }
