@@ -47,14 +47,10 @@ contract('Memory Token', (accounts) => {
       assert.equal(result.toString(), 1, 'total supply is correct');
 
       result = await token.balanceOf(accounts[0]);
-      assert.equal(result.toString(), 1, 'balnceOf is correct');
+      assert.equal(result.toNumber(), 1, 'balnceOf is correct');
       
       result = await token.ownerOf(1);
       assert.equal(result.toString(), accounts[0], 'ownerOf is correct');
-
-      result = await token.tokenOfOwnerByIndex(accounts[0], 0);
-      console.log('result', result)
-      assert.equal(result.toString(), accounts[0], 'ownerOfByIndex is correct');
 
       // owner can see all tokens
       let balanceOf = await token.balanceOf(accounts[0]);
